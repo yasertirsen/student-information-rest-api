@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.studentRestfulApi.model.Address;
 import com.studentRestfulApi.model.Student;
 import com.studentRestfulApi.service.ServiceLayer;
 
@@ -67,6 +69,12 @@ public class MainController {
 	@DeleteMapping("/deleteStudent/{id}")
 	public ResponseEntity<?> deleteStudent(@PathVariable int id) {
 		return serviceLayer.deleteStudentById(id);
+	}
+	
+	@PutMapping(value = "/updateAddress", consumes = "application/json", produces="application/json")
+	@ResponseBody
+	public ResponseEntity<?> updateAddress(@RequestParam Integer studentId, @RequestBody Address address) {
+		return serviceLayer.updateAddress(studentId, address);
 	}
 	
 }

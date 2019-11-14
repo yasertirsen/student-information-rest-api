@@ -2,6 +2,7 @@ package com.studentRestfulApi.service;
 
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.studentRestfulApi.model.Address;
 import com.studentRestfulApi.model.Student;
 import com.studentRestfulApi.repository.StudentRepository;
 
@@ -63,6 +65,12 @@ public class ServiceLayer {
 		}catch(Exception e) { 
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
+	}
+	public ResponseEntity<?> updateAddress(Integer studentId, Address address){
+		Student s = studentRepository.findById(studentId).orElseThrow(() -> new EntityNotFoundException("Student with ID " + studentId + " was not found!"));
+		address.setStudentId(studentId);
+		s.setAddress(address);
+		return new ResponseEntity<>(studentRepository.save(s), HttpStatus.OK);
 	}
 	
 }
