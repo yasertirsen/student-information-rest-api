@@ -21,6 +21,8 @@ import com.studentRestfulApi.model.Address;
 import com.studentRestfulApi.model.Student;
 import com.studentRestfulApi.service.ServiceLayer;
 
+import io.micrometer.core.annotation.Timed;
+
 @RestController
 @RequestMapping("/api")
 public class MainController {
@@ -31,15 +33,17 @@ public class MainController {
 	public MainController(ServiceLayer serviceLayer) {
 		this.serviceLayer = serviceLayer;
 	}
-
+	
 	@GetMapping(value="/getAllStudents", produces="application/json")
 	@ResponseBody
+	@Timed("get-all-students")
 	public ResponseEntity<?> getAllStudents(){
 		return serviceLayer.getStudents();
 	}
 	
 	@GetMapping(value="/getStudent/{id}", produces="application/json")
 	@ResponseBody
+	@Timed("get-student")
 	public ResponseEntity<?> getStudent(@PathVariable int id) {
 			return serviceLayer.getStudentById(id);
 
@@ -47,6 +51,7 @@ public class MainController {
 	
 	@PutMapping(value = "/updateStudent", consumes = "application/json", produces="application/json")
 	@ResponseBody
+	@Timed("update-student")
 	public ResponseEntity<?> updateStudent(@Valid @RequestBody Student student, BindingResult bindingResult) {
 		
 		if(bindingResult.hasErrors())
@@ -57,6 +62,7 @@ public class MainController {
 	
 	@PostMapping(value = "/createStudent", consumes = "application/json")
 	@ResponseBody
+	@Timed("save-student")
 	public ResponseEntity<?> saveStudent(@Valid @RequestBody Student student, BindingResult bindingResult) {
 		
 		if(bindingResult.hasErrors())
@@ -67,12 +73,14 @@ public class MainController {
 	
 	
 	@DeleteMapping("/deleteStudent/{id}")
+	@Timed("delete-student")
 	public ResponseEntity<?> deleteStudent(@PathVariable int id) {
 		return serviceLayer.deleteStudentById(id);
 	}
 	
 	@PutMapping(value = "/updateAddress", consumes = "application/json", produces="application/json")
 	@ResponseBody
+	@Timed("update-address")
 	public ResponseEntity<?> updateAddress(@RequestParam Integer studentId, @RequestBody Address address) {
 		return serviceLayer.updateAddress(studentId, address);
 	}
